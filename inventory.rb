@@ -5,7 +5,7 @@
 
 # method to validate choice of action:
 def validate (action)
-	if action == "change" || action == "print" || action == 'add' || action == 'exit'
+	if action == "add" || action == "change" || action == 'delete' || action == 'print' || action == 'exit'
 		puts "You chose '#{action}.'"
 		puts
 	else 
@@ -34,12 +34,24 @@ print the entire inventory."
 puts
 action = nil
 until action == "exit"
-	puts "What do you want to do?  'change', 'add', or 'print'?"
+	puts "What do you want to do?  'change', 'add', 'delete', or 'print'?"
 	puts "Type 'exit' when done."
 	action = gets.chomp.downcase
 	validate(action)
 
-	if action == "change"
+	if action == "add"
+		puts "What item do you wish to add to inventory? "
+		item = gets.chomp.downcase
+		puts "You added #{item}."
+		puts
+		print "Input the initial quantity: "
+		item_quantity = gets.chomp
+		inventory["#{item}"] = item_quantity
+		new_item_total = inventory["#{item}"]
+		puts
+		puts "Total #{item} in stock is: #{new_item_total}."
+
+	elsif action == "change"
 		print "Here is the current list of inventory items: "
 		inventory.each do |k,v|
 			print "#{k}, "
@@ -55,17 +67,17 @@ until action == "exit"
 		puts
 		puts "Total #{item} in stock is now: #{new_item_total}."
 
-	elsif action == "add"
-		puts "What item do you wish to add to inventory? "
+	elsif action == "delete"
+		print "Here is the current list of inventory items: "
+		inventory.each do |k,v|
+			print "#{k}, "
+		end
+		puts 
+		print "Delete which item (Caution: this action is irreversible!)? "
 		item = gets.chomp.downcase
-		puts "You added #{item}."
+		inventory.tap { |hs| hs.delete(item) }
+		puts "#{item} has been deleted."
 		puts
-		print "Input the initial quantity: "
-		item_quantity = gets.chomp
-		inventory["#{item}"] = item_quantity
-		new_item_total = inventory["#{item}"]
-		puts
-		puts "Total #{item} in stock is: #{new_item_total}."
 
 	elsif action == "print"
 		puts
